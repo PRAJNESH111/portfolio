@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  background: #000000;
+  color: #ffffff;
+  scroll-behavior: smooth !important;
+}
+.bg-image {
+  background-image: url(./assets/jason-root.webp);
+}
+#work,
+#about,
+#experience,
+#contact {
+  scroll-margin-top: 80px;
+}
+@keyframes shadow-rotate {
+  0% {
+    box-shadow: 0 0 20px red;
+  }
+  25% {
+    box-shadow: 0 0 20px blue;
+  }
+  50% {
+    box-shadow: 0 0 20px green;
+  }
+  75% {
+    box-shadow: 0 0 20px orange;
+  }
+  100% {
+    box-shadow: 0 0 20px purple;
+  }
+}
+
+.shadow-animate {
+  animation: shadow-rotate 5s infinite linear;
+}
