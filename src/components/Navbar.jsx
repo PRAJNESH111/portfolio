@@ -20,7 +20,7 @@ function Navbar({ isOpen }) {
     >
       <div className="flex justify-between items-center max-w-6xl mx-auto md:my-2 bg-stone-950/30 p-4 md:rounded-xl backdrop-blur-lg  shadow-animate">
         <div className="text-white font-semibold text-lg uppercase">
-          <a href="/" draggable="false">
+          <a href="/portfolio/" draggable="false">
             <img
               src="./logopraj.png"
               draggable="false"

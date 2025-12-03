@@ -92,15 +92,15 @@ function Hero({ isOpen, setIsOpen }) {
           </div>
         </motion.div>
         <motion.div
-          className="w-full md:w-1/2 p-8 shadow-animate"
+          className="w-full md:w-1/2 p-8 shadow-animate 2xl:p-16 flex justify-center items-center "
           initial="hidden"
           variants={imageVariants}
           animate="visible"
         >
           <img
-            src="./logopraj.png"
+            src="./PrajneshProfilePic.jpg"
             alt="Hero Image"
-            className="rounded-3xl shadow-animate"
+            className="rounded-3xl shadow-animate xl:h-96 2xl:h-[35rem] mx-auto"
             draggable="false"
           />
         </motion.div>

@@ -186,7 +186,7 @@ function Contact() {
               variants={textVariants}
               type="submit"
             >
-              Submit
+              Send
             </motion.button>
           </form>
         </div>
