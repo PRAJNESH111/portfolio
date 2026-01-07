@@ -157,20 +157,11 @@ Suggested workflow:
 4. Push to your branch: `git push origin feat/my-change`
 5. Open a PR describing your changes
 
-## License
-
-This project is provided under the MIT License. Replace with your preferred license if different.
 
 ## Contact
 
 Maintainer: PRAJNESH111  
 GitHub: https://github.com/PRAJNESH111  
-Email: (add your email)
 
-## Acknowledgements
 
-- Template ideas from community portfolios and open-source templates
-- Icons: Font Awesome, Heroicons, or other icon sets
-- Deployment guides: Netlify / Vercel documentation
 
-```
