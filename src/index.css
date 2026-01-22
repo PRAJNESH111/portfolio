@@ -37,3 +37,17 @@
 .shadow-animate {
   animation: shadow-rotate 5s infinite linear;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+::-webkit-scrollbar-track {
+  background: #222;
+}

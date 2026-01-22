@@ -2,6 +2,7 @@ import { motion, scale } from "framer-motion";
 import { CONTACT_CONTENT } from "../constants";
 import emailjs from "@emailjs/browser";
 import { useRef } from "react";
+import { toast } from "react-toastify";
 
 import {
   RiGithubFill,
@@ -48,12 +49,16 @@ function Contact() {
       )
       .then(
         (result) => {
-          alert("Mail sent to Prajnesh Kumar");
+          toast.success("Mail sent to Prajnesh Kumar", {
+            toastId: "contact-mail-sent",
+          });
           console.log(result.text);
           formRef.current.reset();
         },
         (error) => {
-          alert("Failed to send Mail.");
+          toast.error("Failed to send mail.", {
+            toastId: "contact-mail-failed",
+          });
           console.error(error.text);
         }
       );
@@ -157,6 +162,10 @@ function Contact() {
               name="email"
               className="mt-2 p-2 w-full md:w-96 bg-transparent border-b-2 border-white text-white focus:outline-none focus:border-yellow-500"
               placeholder="Enter your email"
+              required
+              initial="hidden"
+              whileInView="visible"
+              variants={textVariants}
             />
 
             <motion.label
@@ -177,6 +186,7 @@ function Contact() {
               initial="hidden"
               whileInView="visible"
               variants={textVariants}
+              required
             />
             <br />
             <motion.button

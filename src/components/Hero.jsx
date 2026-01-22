@@ -38,7 +38,7 @@ function Hero({ isOpen, setIsOpen }) {
             className="text-4xl md:text-3xl lg:text-5xl my-14 "
             variants={textVariants}
           >
-            <TypeAnimation
+            {/* <TypeAnimation
               sequence={["Hey there! 🖐️", 1000, "", 1000]}
               wrapper="span"
               speed={50}
@@ -49,7 +49,7 @@ function Hero({ isOpen, setIsOpen }) {
                 fontWeight: "bold",
               }}
               repeat={Infinity}
-            />
+            /> */}
           </motion.h1>
           <motion.p
             className="text-xl md:text-2xl lg:text-3xl "
@@ -100,7 +100,7 @@ function Hero({ isOpen, setIsOpen }) {
           <img
             src="./PrajneshProfilePic.jpg"
             alt="Hero Image"
-            className="rounded-3xl shadow-animate xl:h-96 2xl:h-[35rem] mx-auto"
+            className="rounded-3xl shadow-animate xl:h-96 2xl:h-[35rem] mx-auto lg:ml-[80px]"
             draggable="false"
           />
         </motion.div>
