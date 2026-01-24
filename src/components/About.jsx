@@ -57,7 +57,7 @@ export default function About({ isOpen, setIsOpen }) {
     <div className="relative">
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-stone-50 text-black rounded-lg  hover:cursor-pointer"
+        className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-2xl smooth-transition cursor-pointer hover:scale-105 active:scale-95"
       >
         About Me →
       </button>

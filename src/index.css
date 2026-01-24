@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 :root {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
@@ -7,47 +13,117 @@
   color: #ffffff;
   scroll-behavior: smooth !important;
 }
-.bg-image {
-  background-image: url(./assets/jason-root.webp);
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
+
+body {
+  overflow-x: hidden;
+}
+
 #work,
 #about,
 #experience,
-#contact {
-  scroll-margin-top: 80px;
+#contact,
+#education {
+  scroll-margin-top: 100px;
 }
+
 @keyframes shadow-rotate {
   0% {
-    box-shadow: 0 0 20px red;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
   }
   25% {
-    box-shadow: 0 0 20px blue;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
   }
   50% {
-    box-shadow: 0 0 20px green;
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
   }
   75% {
-    box-shadow: 0 0 20px orange;
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
   }
   100% {
-    box-shadow: 0 0 20px purple;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
   }
 }
 
 .shadow-animate {
-  animation: shadow-rotate 5s infinite linear;
+  animation: shadow-rotate 6s infinite linear;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
+  background: linear-gradient(180deg, #3b82f6, #10b981);
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #777;
+  background: linear-gradient(180deg, #2563eb, #059669);
 }
+
 ::-webkit-scrollbar-track {
-  background: #222;
+  background: #1a1a1a;
+  border-radius: 10px;
+}
+
+.smooth-transition {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
 }

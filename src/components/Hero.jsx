@@ -1,108 +1,160 @@
 import { motion } from "framer-motion";
 import { HERO_CONTENT } from "../constants";
-import { TypeAnimation } from "react-type-animation";
 import About from "./About";
 
 const textVariants = {
-  hidden: { opacity: 1, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 30 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.6, -0.05, 0.01, 0.99],
+      delay
+    }
+  }),
 };
-const contsinerVariants = {
-  hidden: { opacity: 1 },
+
+const containerVariants = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.3,
+      staggerChildren: 0.2,
+      delayChildren: 0.1
     },
   },
 };
+
 const imageVariants = {
-  hidden: { clipPath: "inset(50% 0 50% 0)" },
-  visible: {
-    clipPath: "inset(0 0% 0 0%)",
-    transition: { duration: 1.2, ease: "easeInOut" },
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+    rotate: -5
   },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    rotate: 0,
+    transition: {
+      duration: 1,
+      ease: [0.6, -0.05, 0.01, 0.99]
+    },
+  },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      delay,
+      ease: [0.6, -0.05, 0.01, 0.99]
+    }
+  }),
+  hover: {
+    scale: 1.05,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  },
+  tap: {
+    scale: 0.95
+  }
 };
 
 function Hero({ isOpen, setIsOpen }) {
   return (
     <section id="hero">
-      <div className="relative z-10 min-h-screen  flex flex-wrap flex-col md:flex-row items-center justify-center mt-10 text-white ">
+      <div className="relative z-10 min-h-screen flex flex-wrap flex-col md:flex-row items-center justify-center mt-10 text-white">
         <motion.div
-          className="w-full md:w-1/2 p-9 "
+          className="w-full md:w-1/2 p-9"
           initial="hidden"
-          variants={contsinerVariants}
+          variants={containerVariants}
           animate="visible"
         >
-          <motion.h1
-            className="text-4xl md:text-3xl lg:text-5xl my-14 "
+          <motion.div
             variants={textVariants}
+            custom={0}
           >
-            {/* <TypeAnimation
-              sequence={["Hey there! 🖐️", 1000, "", 1000]}
-              wrapper="span"
-              speed={50}
-              style={{
-                fontSize: "40px",
-                display: "inline-block",
-                color: "white",
-                fontWeight: "bold",
-              }}
-              repeat={Infinity}
-            /> */}
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl lg:text-3xl "
+            <h2 className="text-2xl md:text-3xl lg:text-4xl mb-4 text-blue-400 font-light">
+              Hello, I'm
+            </h2>
+          </motion.div>
+
+          <motion.div
             variants={textVariants}
+            custom={0.2}
           >
-            {HERO_CONTENT.introduction.before}
-            <span className="text-stone-550 font-bold text-4xl md:text-5xl lg:text-6xl ">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-green-400 to-yellow-400 text-transparent bg-clip-text gradient-animate">
               {HERO_CONTENT.introduction.name}
-            </span>
-            <br />
-            <br />
+            </h1>
+          </motion.div>
+
+          <motion.p
+            className="text-xl md:text-2xl lg:text-3xl mb-6 text-gray-300"
+            variants={textVariants}
+            custom={0.4}
+          >
             {HERO_CONTENT.introduction.after}
           </motion.p>
 
           <motion.p
-            className="text-xl md:text-2xl lg:text-4xl "
+            className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-400"
             variants={textVariants}
+            custom={0.6}
           >
             {HERO_CONTENT.description}
           </motion.p>
-          <div className="flex  justify-start items-center md:items-start mt-8 gap-4 ">
+
+          <div className="flex justify-start items-center gap-4 flex-wrap">
             <motion.a
-              className="bg-stone-50 text-black p-3 lg:p-4 mt-8 inline-block rounded-2xl shadow-animate"
+              className="bg-gradient-to-r from-blue-500 to-green-500 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-2xl smooth-transition cursor-pointer"
               href={HERO_CONTENT.resumeLink}
               download={HERO_CONTENT.resumeLink}
               rel="noopener noreferrer"
               target="_blank"
-              variants={textVariants}
+              variants={buttonVariants}
+              custom={0.8}
+              whileHover="hover"
+              whileTap="tap"
             >
               {HERO_CONTENT.resumeLinkText}
             </motion.a>
-            <motion.a
-              className="bg-stone-50 text-black  inline-block rounded-2xl  p-3 lg:p-4 mt-8 shadow-animate"
-              href="#about"
-              rel="noopener noreferrer"
-              variants={textVariants}
+
+            <motion.div
+              variants={buttonVariants}
+              custom={1}
+              whileHover="hover"
+              whileTap="tap"
             >
               <About isOpen={isOpen} setIsOpen={setIsOpen} />
-            </motion.a>
+            </motion.div>
           </div>
         </motion.div>
+
         <motion.div
-          className="w-full md:w-1/2 p-8 shadow-animate 2xl:p-16 flex justify-center items-center "
+          className="w-full md:w-1/2 p-8 2xl:p-16 flex justify-center items-center"
           initial="hidden"
           variants={imageVariants}
           animate="visible"
         >
-          <img
-            src="./PrajneshProfilePic.jpg"
-            alt="Hero Image"
-            className="rounded-3xl shadow-animate xl:h-96 2xl:h-[35rem] mx-auto lg:ml-[80px]"
-            draggable="false"
-          />
+          <motion.div
+            className="relative"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 rounded-3xl blur-2xl opacity-30"></div>
+            <img
+              src="./PrajneshProfilePic.jpg"
+              alt="Hero Image"
+              className="relative rounded-3xl shadow-2xl xl:h-96 2xl:h-[35rem] mx-auto object-cover border-4 border-white/10 float-animation"
+              draggable="false"
+            />
+          </motion.div>
         </motion.div>
       </div>
     </section>

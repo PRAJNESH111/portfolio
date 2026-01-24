@@ -1,7 +1,7 @@
-import { motion, scale } from "framer-motion";
+import { motion } from "framer-motion";
 import { CONTACT_CONTENT } from "../constants";
 import emailjs from "@emailjs/browser";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -16,12 +16,13 @@ const textVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
-      ease: "easeOut",
+      duration: 0.6,
+      ease: [0.6, -0.05, 0.01, 0.99],
       delay,
     },
   }),
 };
+
 const iconVariants = {
   hidden: { opacity: 0, scale: 0 },
   visible: (delay = 0) => ({
@@ -34,8 +35,10 @@ const iconVariants = {
     },
   }),
 };
+
 function Contact() {
   const formRef = useRef();
+  const [focusedField, setFocusedField] = useState(null);
   const sendEmail = (e) => {
     e.preventDefault();
 
@@ -65,45 +68,61 @@ function Contact() {
   };
   return (
     <section
-      className="min-h-screen flex flex-col justify-center px-4 md:px-10 py-10 text-white"
+      className="min-h-screen flex flex-col justify-center px-4 md:px-10 py-20 text-white"
       id="contact"
     >
-      <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-10">
-        {" "}
-        Contact
-      </h2>
-      <div className="h-1 w-20 mb-8 bg-white"></div>
-      <motion.h3
-        className="text-4xl md:text-6xl leading-none "
+      <motion.div
         initial="hidden"
         whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
         variants={textVariants}
+      >
+        <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
+          Contact
+        </h2>
+        <div className="h-1 w-20 mb-12 bg-gradient-to-r from-blue-500 to-green-500 rounded-full"></div>
+      </motion.div>
+
+      <motion.h3
+        className="text-3xl md:text-5xl leading-tight mb-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={textVariants}
+        custom={0.2}
       >
         {CONTACT_CONTENT.headline}
       </motion.h3>
-      <div className="relative flex flex-col md:flex-row items-start justify-center text-white ">
-        <div className="w-full md:w-1/2 p-6 md:p-10  lg:p-2 ">
+
+      <div className="relative flex flex-col lg:flex-row items-start justify-between gap-12 text-white">
+        <div className="w-full lg:w-1/2">
           <motion.p
-            className="text-lg md:text-2xl mt-6 max-w-3xl "
+            className="text-lg md:text-xl mb-8 text-gray-300"
             initial="hidden"
             whileInView="visible"
+            viewport={{ once: true }}
             variants={textVariants}
+            custom={0.4}
           >
             {CONTACT_CONTENT.description}
           </motion.p>
+
           <motion.a
             href={`https://mail.google.com/mail/?view=cm&to=${CONTACT_CONTENT.email}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-2xl md:text-3xl font-medium mt-8"
+            className="inline-block text-xl md:text-2xl font-medium mb-8 text-blue-400 hover:text-blue-300 smooth-transition"
             initial="hidden"
             whileInView="visible"
-            variants={textVariants}
             viewport={{ once: true }}
+            variants={textVariants}
+            custom={0.6}
+            whileHover={{ scale: 1.05 }}
           >
             {CONTACT_CONTENT.email}
           </motion.a>
-          <div className="flex space-x-6 mt-8 ">
+
+          <div className="flex space-x-6">
             {CONTACT_CONTENT.socialLinks.map((link, index) => {
               const Icon =
                 link.icon === "RiWhatsappFill"
@@ -118,100 +137,100 @@ function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={link.ariaLabel}
+                  className="p-3 bg-white/5 rounded-full hover:bg-white/10 smooth-transition"
                   initial="hidden"
                   whileInView="visible"
-                  custom={1.0 + index * 0.2}
+                  viewport={{ once: true }}
+                  custom={0.8 + index * 0.1}
                   variants={iconVariants}
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <Icon size={36}></Icon>
+                  <Icon size={28} />
                 </motion.a>
               );
             })}
           </div>
         </div>
-        <div className="w-full md:w-1/2 p-6 md:p-10  lg:p-2 ">
-          <form ref={formRef} onSubmit={sendEmail}>
-            {/* <motion.label
-              htmlFor="name"
-              className="block text-xl md:text-2xl leading-none text-bold"
-              initial="hidden"
-              whileInView="visible"
-              variants={textVariants}
-            >
-              Name :
-            </motion.label>
-            <motion.input
-              id="name"
-              type="text"
-              name="name"
-              className="mt-2 p-2 w-full md:w-96 bg-transparent border-b-2 border-white text-white focus:outline-none focus:border-yellow-500"
-              placeholder="Enter your name"
-              initial="hidden"
-              whileInView="visible"
-              variants={textVariants}
-            /> */}
-            <motion.label
-              htmlFor="email"
-              className="block text-xl md:text-2xl mt-5"
-            >
-              Email :
-            </motion.label>
-            <motion.input
-              id="email"
-              type="email"
-              name="email"
-              className="mt-2 p-2 w-full md:w-96 bg-transparent border-b-2 border-white text-white focus:outline-none focus:border-yellow-500"
-              placeholder="Enter your email"
-              required
-              initial="hidden"
-              whileInView="visible"
-              variants={textVariants}
-            />
 
-            <motion.label
-              htmlFor="query"
-              className="block text-xl md:text-2xl leading-none mt-10"
-              initial="hidden"
-              whileInView="visible"
-              variants={textVariants}
-            >
-              Query :
-            </motion.label>
-            <motion.textarea
-              id="query"
-              name="query"
-              className="mt-2 p-2 w-full md:w-96 bg-transparent border-b-2 border-white text-white focus:outline-none focus:border-yellow-500"
-              placeholder="Enter your query"
-              rows={4}
-              initial="hidden"
-              whileInView="visible"
-              variants={textVariants}
-              required
-            />
-            <br />
+        <motion.div
+          className="w-full lg:w-1/2"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={textVariants}
+          custom={0.6}
+        >
+          <form ref={formRef} onSubmit={sendEmail} className="space-y-6">
+            <div className="relative">
+              <motion.input
+                id="email"
+                type="email"
+                name="email"
+                className="w-full px-4 py-3 bg-white/5 border-2 rounded-xl text-white placeholder-gray-400 focus:outline-none smooth-transition"
+                style={{
+                  borderColor: focusedField === "email" ? "#3b82f6" : "rgba(255, 255, 255, 0.1)"
+                }}
+                placeholder="Your email"
+                required
+                onFocus={() => setFocusedField("email")}
+                onBlur={() => setFocusedField(null)}
+                whileFocus={{ scale: 1.02 }}
+              />
+            </div>
+
+            <div className="relative">
+              <motion.textarea
+                id="query"
+                name="query"
+                className="w-full px-4 py-3 bg-white/5 border-2 rounded-xl text-white placeholder-gray-400 focus:outline-none smooth-transition resize-none"
+                style={{
+                  borderColor: focusedField === "query" ? "#3b82f6" : "rgba(255, 255, 255, 0.1)"
+                }}
+                placeholder="Your message"
+                rows={6}
+                required
+                onFocus={() => setFocusedField("query")}
+                onBlur={() => setFocusedField(null)}
+                whileFocus={{ scale: 1.02 }}
+              />
+            </div>
+
             <motion.button
-              className="bg-stone-50 text-black p-3 lg:p-4 mt-8 inline-block rounded-2xl shadow-animate *:w-full md:w-auto text-center hover:cursor-pointer"
-              rel="noopener noreferrer"
-              target="_blank"
-              variants={textVariants}
+              className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-2xl smooth-transition cursor-pointer"
               type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Send
+              Send Message
             </motion.button>
           </form>
-        </div>
+        </motion.div>
       </div>
-      <div className="flex justify-end items-center mt-8">
-        <motion.a
-          className="fixed bottom-6 right-6 bg-stone-50 text-black p-3 lg:p-4 rounded-full shadow-animate hover:cursor-pointer z-100"
-          rel="noopener noreferrer"
-          variants={textVariants}
-          type="submit"
-          href="#hero"
+
+      <motion.a
+        className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-500 to-green-500 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl cursor-pointer z-50"
+        href="#hero"
+        whileHover={{ scale: 1.1, rotate: 360 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
         >
-          ↑
-        </motion.a>
-      </div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 10l7-7m0 0l7 7m-7-7v18"
+          />
+        </svg>
+      </motion.a>
     </section>
   );
 }
