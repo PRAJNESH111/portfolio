@@ -1,69 +1,84 @@
-import { PROJECTS } from "../constants";
 import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
+import { PROJECTS } from "../constants";
+import { useReducedMotionPreference } from "../hooks/useUserPreferences";
+import Magnet from "./Magnet";
 
-function Project() {
-  const projectVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8,
-      rotate: -40,
-      y: 50,
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      rotate: 0,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-        type: "spring",
-        bounce: 0.4,
-      },
+const MotionArticle = motion.article;
+
+function getCardMotion(prefersReducedMotion, delay = 0) {
+  if (prefersReducedMotion) {
+    return {};
+  }
+
+  return {
+    initial: { opacity: 0, y: 28, scale: 0.98 },
+    whileInView: { opacity: 1, y: 0, scale: 1 },
+    viewport: { once: true, amount: 0.15 },
+    transition: {
+      duration: 0.55,
+      delay,
+      ease: [0.22, 1, 0.36, 1],
     },
   };
+}
+
+function Project({ enableInteractiveEffects }) {
+  const prefersReducedMotion = useReducedMotionPreference();
+
   return (
-    <section className="px-6 py-10 " id="work">
-      <h1 className="text-4xl md:text-6xl font-medium tracking-tight mb-10  ">
-        Project Works
-      </h1>
-      <div className="h-1 w-20 mb-8 bg-white"></div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {PROJECTS.map((project, index) => (
-          <motion.div
-            key={index}
-            className="relative rounded-lg overflow-hidden h-[400px] transition transform hover:scale-105"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={projectVariants}
-          >
-            <img
-              src={project.image}
-              alt={project.title}
-              className="absolute insert-0 w-full h-full object-cover transition-opacity duration-300"
-            />
-            <div className="relative z-20 p-6 flex flex-col justify-between h-full bg-black/50 text-white">
-              <h1 className="text-2xl font-medium mb-4">{project.name}</h1>
-              <div className="flex flex-col justify-between">
-                <p className="mb-4 flex-grow text-2xl ">
-                  {project.description}
-                </p>
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white text-stone-800 rounded-full py-2 w-32 text-sm hoover:bg-gray-100 transition-colors duration-300 text-center hover:cursor-pointer shadow-animate"
-                >
-                  View on GitHub
-                </a>
+    <section id="work" className="section-space" aria-label="Projects section">
+      <div className="section-wrap space-y-8">
+        <header className="space-y-4">
+          <p className="section-kicker">Builds</p>
+          <h2 className="section-title">Project Works</h2>
+          <div className="muted-divider" />
+        </header>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {PROJECTS.map((project, index) => (
+            <MotionArticle
+              key={project.name}
+              className="card-shell-strong group overflow-hidden"
+              {...getCardMotion(prefersReducedMotion, index * 0.04)}
+            >
+              <div className="relative overflow-hidden">
+                <img
+                  src={project.image}
+                  alt={`${project.name} project preview`}
+                  className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:h-56"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-canvas/65 via-transparent to-transparent" />
               </div>
-            </div>
-          </motion.div>
-        ))}
+
+              <div className="space-y-4 p-5">
+                <h3 className="font-display text-xl font-semibold text-text">{project.name}</h3>
+                <p className="text-sm leading-relaxed text-muted sm:text-base">{project.description}</p>
+
+                <Magnet
+                  disabled={!enableInteractiveEffects}
+                  wrapperClassName="inline-flex"
+                  innerClassName="inline-flex"
+                >
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary gap-2"
+                  >
+                    <span>View on GitHub</span>
+                    <ExternalLink size={16} aria-hidden="true" />
+                  </a>
+                </Magnet>
+              </div>
+            </MotionArticle>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
 export default Project;
+

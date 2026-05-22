@@ -1,137 +1,149 @@
-// import { motion } from "framer-motion";
-// import { ABOUT_CONTENT } from "../constants";
-
-// function About() {
-//   const textVariant = {
-//     hidden: { opacity: 0, y: 50 },
-//     visible: {
-//       opacity: 1,
-//       y: 0,
-//       transition: { duration: 0.8, ease: "easeOut" },
-//     },
-//   };
-//   return (
-//     <section className="px-6 py-10" id="about">
-//       <h1 className="text-4xl md:text-6xl font-medium tracking-tight mb-10">
-//         About Me
-//       </h1>
-//       <div className="h-1 w-20 mb-8 bg-white"></div>
-//       <div className="max-w-4xl mx-auto">
-//         {ABOUT_CONTENT.paragraphs.map((paragraph, index) => (
-//           <motion.p
-//             key={index}
-//             className="text-xl md:text-2xl lg:text=4xl mb-10 leading-relaxed"
-//             initial="hidden"
-//             whileInView="visible"
-//             viewport={{ once: true, amount: 0.5 }}
-//             variants={textVariant}
-//           >
-//             {paragraph}
-//           </motion.p>
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
-
-// export default About;
-
 import { useEffect } from "react";
-import Mongo from "/mongo.svg";
-import Express from "/icons8-express-js-480.svg";
-import ReactLogo from "/react.svg";
-import Node from "/node.svg";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { ABOUT_CONTENT } from "../constants";
+import Magnet from "./Magnet";
 
-export default function About({ isOpen, setIsOpen }) {
+const stackIcons = [
+  { alt: "MongoDB", file: "mongo.svg" },
+  { alt: "Express", file: "icons8-express-js-480.svg" },
+  { alt: "React", file: "react.svg" },
+  { alt: "Node.js", file: "node.svg" },
+];
+
+function About({ enableInteractiveEffects, isOpen, setIsOpen }) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+    if (!isOpen) {
+      return undefined;
     }
-  }, [isOpen]);
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, setIsOpen]);
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-stone-50 text-black rounded-lg  hover:cursor-pointer"
+    <>
+      <Magnet
+        disabled={!enableInteractiveEffects}
+        wrapperClassName="inline-flex"
+        innerClassName="inline-flex"
       >
-        About Me →
-      </button>
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="btn-secondary"
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+        >
+          About Me
+        </button>
+      </Magnet>
 
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 ">
-          <div
-            className="absolute inset-0"
-            onClick={() => setIsOpen(false)}
-          ></div>
+      {isOpen
+        ? createPortal(
+            <div className="fixed inset-0 z-[80] bg-canvas/80 backdrop-blur-sm">
+              <div
+                className="absolute inset-0"
+                onClick={() => setIsOpen(false)}
+                aria-hidden="true"
+              />
 
-          <div
-            className="popup-box relative bg-gradient-to-r from-[#b04489] to-[#0f0f10] text-white rounded-xl p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto z-10 shadow-animate"
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              className="absolute top-4 right-4 text-gray-300 hover:text-white transition-transform duration-300 hover:rotate-180 hover:cursor-pointer"
-              onClick={() => setIsOpen(false)}
-              aria-label="Close about popup"
-            >
-              <X size={26} />
-            </button>
+              <div className="section-wrap relative flex min-h-screen items-center py-8 sm:py-12">
+                <section
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="about-title"
+                  className="card-shell-strong relative w-full max-h-[88vh] overflow-y-auto p-5 sm:p-8"
+                >
+                  <button
+                    type="button"
+                    className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-pill border border-subtle bg-surface text-muted transition-colors duration-200 hover:text-text"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close About dialog"
+                  >
+                    <X size={20} />
+                  </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-2xl font-bold mb-4">ABOUT ME</h2>
-                <p className="mb-6">{ABOUT_CONTENT.paragraphs}</p>
+                  <div className="space-y-8 pr-9 sm:pr-12">
+                    <header className="space-y-3">
+                      <p className="section-kicker">Profile</p>
+                      <h2 id="about-title" className="section-title">
+                        About Me
+                      </h2>
+                    </header>
 
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {ABOUT_CONTENT.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="bg-black/40 border border-gray-700 px-3 py-1 rounded-full text-sm"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+                    <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+                      <div className="space-y-4">
+                        {ABOUT_CONTENT.paragraphs.map((paragraph) => (
+                          <p
+                            key={paragraph}
+                            className="text-sm leading-relaxed text-muted sm:text-base"
+                          >
+                            {paragraph}
+                          </p>
+                        ))}
 
-                <h3 className="text-xl font-bold mb-4">MERN STACK</h3>
+                        <div className="flex flex-wrap gap-2 pt-2" aria-label="Skills list">
+                          {ABOUT_CONTENT.skills.map((skill) => (
+                            <span
+                              key={skill}
+                              className="rounded-pill border border-subtle bg-soft px-3 py-1 text-xs font-medium text-muted"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
 
-                <div className="flex items-center gap-6">
-                  <img src={Mongo} alt="MongoDB" className="h-12 w-12" />
-                  <img
-                    src={Express}
-                    alt="Express"
-                    className="h-12 w-12 "
-                    style={{ fill: "white" }}
-                  />
-                  <img src={ReactLogo} alt="React" className="h-12 w-12" />
-                  <img src={Node} alt="Node.js" className="h-12 w-12" />
-                </div>
+                      <div className="card-shell space-y-5 p-4 sm:p-5">
+                        <h3 className="font-display text-xl font-semibold text-text">MERN Stack</h3>
 
-                <div className="flex items-center gap-6 ml-4 mt-3 hidden sm:flex">
-                  <h1 className="h-12 w-12 text-green-600">M</h1>
-                  <h1 className="h-12 w-12 text-white">E</h1>
-                  <h1 className="h-12 w-12 text-blue-300">R</h1>
-                  <h1 className="h-12 w-12 text-green-600">N</h1>
-                </div>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+                          {stackIcons.map((icon) => (
+                            <div
+                              key={icon.alt}
+                              className="flex items-center gap-2 rounded-md border border-subtle bg-surface-elevated px-3 py-2"
+                            >
+                              <img
+                                src={`${import.meta.env.BASE_URL}${icon.file}`}
+                                alt={icon.alt}
+                                className="h-7 w-7 object-contain"
+                                draggable="false"
+                              />
+                              <span className="text-xs font-medium text-muted">{icon.alt}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <img
+                          src={`${import.meta.env.BASE_URL}coder.svg`}
+                          alt="Coding illustration"
+                          className="mx-auto max-h-48 w-full object-contain"
+                          draggable="false"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </div>
-
-              <div className="flex justify-center items-center">
-                <img
-                  src="./coder.svg"
-                  alt="coding illustration"
-                  className="max-w-full h-auto select-none"
-                  draggable="false"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
   );
 }
+
+export default About;

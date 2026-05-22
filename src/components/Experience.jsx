@@ -1,65 +1,68 @@
-import { motion, stagger } from "framer-motion";
+import { motion } from "framer-motion";
 import { EXPERIENCES } from "../constants";
+import { useReducedMotionPreference } from "../hooks/useUserPreferences";
+
+const MotionLi = motion.li;
+
+function getRevealMotion(prefersReducedMotion) {
+  if (prefersReducedMotion) {
+    return {};
+  }
+
+  return {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.15 },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  };
+}
 
 function Experience() {
-  const contsinerVarients = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.2 },
-    },
-  };
-  const childVarients = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
+  const prefersReducedMotion = useReducedMotionPreference();
+
   return (
-    <section className="px-6 py-10" id="experience">
-      <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-10">
-        Experience
-      </h2>
-      <div className="h-1 w-20 mb-8 bg-white"></div>
-      <motion.div
-        className="space-y-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={contsinerVarients}
-      >
-        {EXPERIENCES.map((experience, index) => (
-          <motion.div
-            key={index}
-            className="bg-stone-950/30 backdrop-blur-lg p-6 rounded-xl shadow-lg"
-            variants={childVarients}
-          >
-            <div className="flex flex-col md:flex-row md:justify-between">
-              <div className="text-sm md:w-1/4 mb-2 md:mb-0 p-4">
-                {experience.yearRange}
-              </div>
-              <div className="md:w-3/4 mb-10 ">
-                <div className="max-w-3xl backdrop-blur-3xl p-4 bg-stone-600/10 rounded-lg ">
-                  <h2 className="text-xl md-2 ">{experience.title}</h2>
-                  <p className="mb-4 text-sm italic ">{experience.location}</p>
-                  <ul className="list-disc list-inside space-y-2">
-                    {experience.description.map((desc, index) => (
-                      <li key={index} className="text-sm">
-                        {desc}
+    <section id="experience" className="section-space" aria-label="Experience section">
+      <div className="section-wrap space-y-8">
+        <header className="space-y-4">
+          <p className="section-kicker">Work</p>
+          <h2 className="section-title">Experience</h2>
+          <div className="muted-divider" />
+        </header>
+
+        <ul className="space-y-4 sm:space-y-5" aria-label="Professional experience timeline">
+          {EXPERIENCES.map((experience) => (
+            <MotionLi
+              key={`${experience.yearRange}-${experience.title}`}
+              className="card-shell-strong elevate-hover p-5 sm:p-6"
+              {...getRevealMotion(prefersReducedMotion)}
+            >
+              <div className="grid gap-4 md:grid-cols-[1fr_2fr] md:items-start">
+                <p className="text-sm font-semibold tracking-wide text-primary">
+                  {experience.yearRange}
+                </p>
+
+                <div className="space-y-3">
+                  <h3 className="font-display text-lg font-semibold text-text sm:text-xl">
+                    {experience.title}
+                  </h3>
+                  <p className="text-sm font-medium italic text-muted">{experience.location}</p>
+
+                  <ul className="space-y-2 text-sm leading-relaxed text-muted sm:text-base">
+                    {experience.description.map((point) => (
+                      <li key={point} className="list-disc pl-1 marker:text-primary">
+                        {point}
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+            </MotionLi>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
 
 export default Experience;
+

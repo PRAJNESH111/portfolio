@@ -1,53 +1,265 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  background: #000000;
-  color: #ffffff;
-  scroll-behavior: smooth !important;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Sora", "Segoe UI", sans-serif;
+
+  --radius-base: 1rem;
+  --radius-pill: 9999px;
+
+  --space-section: clamp(4rem, 7vw, 7rem);
+  --space-gutter: clamp(1rem, 3vw, 2rem);
+  --space-block: clamp(1rem, 2.5vw, 1.75rem);
+
+  --color-canvas: oklch(0.17 0.02 255);
+  --color-surface: oklch(0.25 0.025 255);
+  --color-surface-elevated: oklch(0.3 0.03 255);
+  --color-soft: oklch(0.36 0.03 255 / 0.5);
+  --color-text: oklch(0.95 0.01 255);
+  --color-muted: oklch(0.8 0.02 255);
+  --color-subtle: oklch(0.45 0.02 255);
+  --color-primary: oklch(0.77 0.15 72);
+  --color-primary-strong: oklch(0.69 0.18 72);
+  --color-primary-foreground: oklch(0.2 0.02 255);
+  --color-ring: oklch(0.84 0.12 72);
+
+  --shadow-soft:
+    0 14px 34px color-mix(in oklab, black 75%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 12%, transparent);
+  --shadow-elevated:
+    0 24px 60px color-mix(in oklab, black 80%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 16%, transparent);
+  --shadow-glow:
+    0 0 0 1px color-mix(in oklab, var(--color-primary) 35%, transparent),
+    0 18px 46px color-mix(in oklab, var(--color-primary) 30%, transparent);
 }
-.bg-image {
-  background-image: url(./assets/jason-root.webp);
+
+@theme inline {
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-soft: var(--color-soft);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-subtle: var(--color-subtle);
+  --color-primary: var(--color-primary);
+  --color-primary-strong: var(--color-primary-strong);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-ring: var(--color-ring);
+
+  --radius-xs: calc(var(--radius-base) - 0.5rem);
+  --radius-sm: calc(var(--radius-base) - 0.3rem);
+  --radius-md: var(--radius-base);
+  --radius-lg: calc(var(--radius-base) + 0.3rem);
+  --radius-xl: calc(var(--radius-base) + 0.75rem);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-elevated: var(--shadow-elevated);
+  --shadow-glow: var(--shadow-glow);
 }
-#work,
-#about,
-#experience,
-#contact {
-  scroll-margin-top: 80px;
-}
-@keyframes shadow-rotate {
-  0% {
-    box-shadow: 0 0 20px red;
+
+@layer base {
+  * {
+    @apply border-subtle;
   }
-  25% {
-    box-shadow: 0 0 20px blue;
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
   }
-  50% {
-    box-shadow: 0 0 20px green;
+
+  body {
+    @apply bg-canvas text-text antialiased;
+    font-family: var(--font-body);
+    text-rendering: optimizeLegibility;
   }
-  75% {
-    box-shadow: 0 0 20px orange;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
   }
-  100% {
-    box-shadow: 0 0 20px purple;
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-primary) 45%, transparent);
+    color: var(--color-text);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  #hero,
+  #education,
+  #work,
+  #experience,
+  #contact {
+    scroll-margin-top: 6.5rem;
   }
 }
 
-.shadow-animate {
-  animation: shadow-rotate 5s infinite linear;
+@layer components {
+  .app-shell {
+    @apply relative min-h-screen overflow-x-hidden bg-canvas text-text;
+  }
+
+  .section-wrap {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-space {
+    padding-block: var(--space-section);
+  }
+
+  .section-title {
+    @apply text-3xl font-semibold sm:text-4xl lg:text-5xl;
+  }
+
+  .section-kicker {
+    @apply mb-4 inline-flex rounded-pill border border-subtle bg-soft px-4 py-2 text-xs font-semibold tracking-[0.16em] uppercase text-muted;
+  }
+
+  .card-shell {
+    @apply rounded-lg border border-subtle bg-surface shadow-soft backdrop-blur-md;
+  }
+
+  .card-shell-strong {
+    @apply rounded-xl border border-subtle bg-surface-elevated shadow-elevated backdrop-blur-xl;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-pill bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-pill border border-subtle bg-surface px-5 py-3 text-sm font-semibold text-text transition-colors duration-200 hover:bg-surface-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring;
+  }
+}
+
+@layer utilities {
+  .elevate-hover {
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease,
+      border-color 200ms ease;
+  }
+
+  .elevate-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--color-subtle));
+  }
+
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .muted-divider {
+    height: 1px;
+    width: 100%;
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in oklab, var(--color-subtle) 95%, transparent),
+        transparent
+      );
+  }
+
+  .bg-nebula {
+    background:
+      radial-gradient(
+        70rem 30rem at 10% -5%,
+        color-mix(in oklab, var(--color-primary) 24%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        50rem 28rem at 85% 0%,
+        color-mix(in oklab, oklch(0.66 0.08 232) 30%, transparent),
+        transparent 66%
+      ),
+      linear-gradient(160deg, var(--color-canvas), oklch(0.15 0.02 245));
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .motion-safe-transform {
+    transition: transform 180ms ease;
+  }
+
+  .motion-safe-transform:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.Toastify__toast-container {
+  width: auto;
+  max-width: min(24rem, 92vw);
+}
+
+.Toastify__toast {
+  border-radius: calc(var(--radius-base) - 0.25rem);
+  border: 1px solid color-mix(in oklab, var(--color-subtle) 88%, transparent);
+  background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  color: var(--color-text);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+.Toastify__close-button,
+.Toastify__toast-icon,
+.Toastify__progress-bar {
+  color: var(--color-muted);
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 0.6rem;
 }
-::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #777;
-}
+
 ::-webkit-scrollbar-track {
-  background: #222;
+  background: color-mix(in oklab, var(--color-canvas) 90%, transparent);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--color-subtle) 88%, transparent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--color-muted) 84%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .elevate-hover:hover,
+  .motion-safe-transform:hover {
+    transform: none;
+  }
 }

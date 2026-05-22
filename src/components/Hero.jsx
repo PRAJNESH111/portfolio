@@ -1,112 +1,119 @@
 import { motion } from "framer-motion";
-import { HERO_CONTENT } from "../constants";
 import { TypeAnimation } from "react-type-animation";
+import { HERO_CONTENT } from "../constants";
+import { useReducedMotionPreference } from "../hooks/useUserPreferences";
 import About from "./About";
+import Magnet from "./Magnet";
 
-const textVariants = {
-  hidden: { opacity: 1, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
-};
-const contsinerVariants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
+const MotionDiv = motion.div;
+const MotionH1 = motion.h1;
+const MotionP = motion.p;
+
+function getRevealMotion(prefersReducedMotion, delay = 0) {
+  if (prefersReducedMotion) {
+    return {};
+  }
+
+  return {
+    initial: { opacity: 0, y: 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.35 },
     transition: {
-      staggerChildren: 0.3,
+      duration: 0.55,
+      delay,
+      ease: [0.22, 1, 0.36, 1],
     },
-  },
-};
-const imageVariants = {
-  hidden: { clipPath: "inset(50% 0 50% 0)" },
-  visible: {
-    clipPath: "inset(0 0% 0 0%)",
-    transition: { duration: 1.2, ease: "easeInOut" },
-  },
-};
+  };
+}
 
-function Hero({ isOpen, setIsOpen }) {
+function Hero({ enableInteractiveEffects, isOpen, setIsOpen }) {
+  const prefersReducedMotion = useReducedMotionPreference();
+  const profileImage = `${import.meta.env.BASE_URL}PrajneshProfilePic.jpg`;
+
   return (
-    <section id="hero">
-      <div className="relative z-10 min-h-screen  flex flex-wrap flex-col md:flex-row items-center justify-center mt-10 text-white ">
-        <motion.div
-          className="w-full md:w-1/2 p-9 "
-          initial="hidden"
-          variants={contsinerVariants}
-          animate="visible"
-        >
-          <motion.h1
-            className="text-4xl md:text-3xl lg:text-5xl my-14 "
-            variants={textVariants}
+    <section id="hero" className="section-space" aria-label="Hero section">
+      <div className="section-wrap grid items-center gap-10 pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+        <div className="space-y-8">
+          <MotionP
+            className="section-kicker"
+            {...getRevealMotion(prefersReducedMotion)}
           >
-            {/* <TypeAnimation
-              sequence={["Hey there! 🖐️", 1000, "", 1000]}
-              wrapper="span"
-              speed={50}
-              style={{
-                fontSize: "40px",
-                display: "inline-block",
-                color: "white",
-                fontWeight: "bold",
-              }}
-              repeat={Infinity}
-            /> */}
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl lg:text-3xl "
-            variants={textVariants}
+            {prefersReducedMotion ? (
+              HERO_CONTENT.greeting
+            ) : (
+              <TypeAnimation
+                sequence={[HERO_CONTENT.greeting, 1700, HERO_CONTENT.greeting]}
+                speed={58}
+                repeat={Infinity}
+                wrapper="span"
+              />
+            )}
+          </MotionP>
+
+          <MotionH1
+            className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl"
+            {...getRevealMotion(prefersReducedMotion, 0.1)}
           >
             {HERO_CONTENT.introduction.before}
-            <span className="text-stone-550 font-bold text-4xl md:text-5xl lg:text-6xl ">
-              {HERO_CONTENT.introduction.name}
-            </span>
-            <br />
-            <br />
-            {HERO_CONTENT.introduction.after}
-          </motion.p>
+            <span className="block text-primary">{HERO_CONTENT.introduction.name}</span>
+          </MotionH1>
 
-          <motion.p
-            className="text-xl md:text-2xl lg:text-4xl "
-            variants={textVariants}
+          <MotionP
+            className="max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
+            {...getRevealMotion(prefersReducedMotion, 0.2)}
+          >
+            {HERO_CONTENT.introduction.after}
+          </MotionP>
+
+          <MotionP
+            className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base"
+            {...getRevealMotion(prefersReducedMotion, 0.25)}
           >
             {HERO_CONTENT.description}
-          </motion.p>
-          <div className="flex  justify-start items-center md:items-start mt-8 gap-4 ">
-            <motion.a
-              className="bg-stone-50 text-black p-3 lg:p-4 mt-8 inline-block rounded-2xl shadow-animate"
-              href={HERO_CONTENT.resumeLink}
-              download={HERO_CONTENT.resumeLink}
-              rel="noopener noreferrer"
-              target="_blank"
-              variants={textVariants}
+          </MotionP>
+
+          <MotionDiv
+            className="flex flex-wrap items-center gap-3"
+            {...getRevealMotion(prefersReducedMotion, 0.3)}
+          >
+            <Magnet
+              disabled={!enableInteractiveEffects}
+              wrapperClassName="inline-flex"
+              innerClassName="inline-flex"
             >
-              {HERO_CONTENT.resumeLinkText}
-            </motion.a>
-            <motion.a
-              className="bg-stone-50 text-black  inline-block rounded-2xl  p-3 lg:p-4 mt-8 shadow-animate"
-              href="#about"
-              rel="noopener noreferrer"
-              variants={textVariants}
-            >
-              <About isOpen={isOpen} setIsOpen={setIsOpen} />
-            </motion.a>
-          </div>
-        </motion.div>
-        <motion.div
-          className="w-full md:w-1/2 p-8 shadow-animate 2xl:p-16 flex justify-center items-center "
-          initial="hidden"
-          variants={imageVariants}
-          animate="visible"
+              <a
+                className="btn-primary glow-primary"
+                href={HERO_CONTENT.resumeLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {HERO_CONTENT.resumeLinkText}
+              </a>
+            </Magnet>
+
+            <About
+              enableInteractiveEffects={enableInteractiveEffects}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+            />
+          </MotionDiv>
+        </div>
+
+        <MotionDiv
+          className="card-shell-strong elevate-hover overflow-hidden p-3 sm:p-4"
+          {...getRevealMotion(prefersReducedMotion, 0.2)}
         >
           <img
-            src="./PrajneshProfilePic.jpg"
-            alt="Hero Image"
-            className="rounded-3xl shadow-animate xl:h-96 2xl:h-[35rem] mx-auto lg:ml-[80px]"
+            src={profileImage}
+            alt="Prajnesh Kumar portrait"
+            className="h-full max-h-[34rem] w-full rounded-lg object-cover"
             draggable="false"
           />
-        </motion.div>
+        </MotionDiv>
       </div>
     </section>
   );
 }
 
 export default Hero;
+

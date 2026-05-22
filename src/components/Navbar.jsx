@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { LINKS } from "../constants";
+import { useState } from "react";
 import { RiCloseFill, RiMenu3Fill } from "@remixicon/react";
+import { LINKS } from "../constants";
+import Magnet from "./Magnet";
 
-function Navbar({ isOpen }) {
+function Navbar({ isAboutOpen, enableInteractiveEffects }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLinkClick = () => {
@@ -11,63 +12,79 @@ function Navbar({ isOpen }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 lg:mt-[20px] sm:mt-0  transition-all duration-300 `}
-      style={{
-        pointerEvents: isOpen ? "none" : "auto",
-        opacity: isOpen ? 0.3 : 1,
-        transition: "opacity 0.3s ease-in-out",
-      }}
+      className={`fixed inset-x-0 top-0 z-50 transition-opacity duration-200 ${
+        isAboutOpen ? "pointer-events-none opacity-35" : "opacity-100"
+      }`}
+      aria-label="Primary"
     >
-      <div className="flex justify-between items-center  lg:rounded-[999px] l max-w-6xl mx-auto md:my-2 bg-stone-950/30 p-4  backdrop-blur-lg  ">
-        <div className="text-white font-semibold text-lg uppercase">
-          <a href="/portfolio/" draggable="false">
-            <img
-              src="./logopraj.png"
-              draggable="false"
-              className="w-[60px] h-[60px] rounded-full"
-              alt=""
-            />
-          </a>
-        </div>
-        <div className="hidden md:flex space-x-8 ">
-          {LINKS.map((link, index) => (
-            <a
-              href={link.href}
-              key={index}
-              className="text-white hover:text-stone-400 transition duration-300"
+      <div className="section-wrap pt-4">
+        <div className="card-shell flex items-center justify-between rounded-pill px-4 py-3 sm:px-6">
+          <a href={import.meta.env.BASE_URL} aria-label="Go to homepage">
+            <Magnet
+              disabled={!enableInteractiveEffects}
+              wrapperClassName="inline-flex"
+              innerClassName="inline-flex"
             >
-              {link.label}
-            </a>
-          ))}
-        </div>
-        <div className="md:hidden">
+              <img
+                src={`${import.meta.env.BASE_URL}logopraj.png`}
+                alt="Prajnesh Kumar logo"
+                className="h-11 w-11 rounded-pill border border-subtle object-cover sm:h-12 sm:w-12"
+                draggable="false"
+              />
+            </Magnet>
+          </a>
+
+          <div className="hidden items-center gap-7 md:flex">
+            {LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium tracking-wide text-muted transition-colors duration-200 hover:text-text focus-visible:text-text"
+              >
+                <Magnet
+                  disabled={!enableInteractiveEffects}
+                  wrapperClassName="inline-block"
+                  innerClassName="inline-block"
+                >
+                  {link.label}
+                </Magnet>
+              </a>
+            ))}
+          </div>
+
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white focus:outline-none"
-            aria-label={menuOpen ? "Close menu " : "Open menu"}
+            type="button"
+            onClick={() => setMenuOpen((value) => !value)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-pill border border-subtle bg-surface text-text md:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
           >
-            {menuOpen ? (
-              <RiCloseFill className="w-6 h-6" />
-            ) : (
-              <RiMenu3Fill className="w-6 h-6" />
-            )}
+            {menuOpen ? <RiCloseFill size={20} /> : <RiMenu3Fill size={20} />}
           </button>
         </div>
+
+        {menuOpen ? (
+          <div
+            id="mobile-navigation"
+            className="card-shell mt-3 rounded-lg px-4 py-4 md:hidden"
+          >
+            <ul className="space-y-3" aria-label="Mobile navigation links">
+              {LINKS.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="block rounded-md px-2 py-2 text-sm font-medium text-muted transition-colors duration-200 hover:bg-surface-elevated hover:text-text"
+                    onClick={handleLinkClick}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
-      {menuOpen && (
-        <div className="md:hidden p-2 bg-stone-950/30 backdrop-blur-lg rounded-xl flex flex-col space-y-4 max-w-6xl mx-auto">
-          {LINKS.map((link, index) => (
-            <a
-              href={link.href}
-              key={index}
-              className="text-white hover-text-stone-400 transition duration-300"
-              onClick={handleLinkClick}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      )}
     </nav>
   );
 }

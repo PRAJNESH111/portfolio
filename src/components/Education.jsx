@@ -1,57 +1,58 @@
-import { motion, stagger } from "framer-motion";
+import { motion } from "framer-motion";
 import { EDUCATION } from "../constants";
+import { useReducedMotionPreference } from "../hooks/useUserPreferences";
+
+const MotionLi = motion.li;
+
+function getStaggerMotion(prefersReducedMotion) {
+  if (prefersReducedMotion) {
+    return {};
+  }
+
+  return {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.2 },
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  };
+}
+
 function Education() {
-  const contsinerVarients = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.2 },
-    },
-  };
-  const childVarients = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
+  const prefersReducedMotion = useReducedMotionPreference();
+
   return (
-    <section className="px-6 py-29" id="education">
-      <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-10">
-        Education
-      </h2>
-      <div className="h-1 w-20 mb-8 bg-white"></div>
-      <motion.div
-        className="space-y-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={contsinerVarients}
-      >
-        {EDUCATION.map((experience, index) => (
-          <motion.div
-            key={index}
-            className="bg-stone-950/30 backdrop-blur-lg p-6 rounded-xl shadow-lg"
-            variants={childVarients}
-          >
-            <div className="flex flex-col md:flex-row md:justify-between">
-              <div className="text-sm md:w-1/4 mb-2 md:mb-0 p-4">
-                {experience.yearRange}
-              </div>
-              <div className="md:w-3/4 mb-10 ">
-                <div className="max-w-xl backdrop-blur-xl p-4 bg-stone-600/10 rounded-lg ">
-                  <h2 className="text-lg md-2 ">{experience.title}</h2>
-                  <p className="mb-4 text-sm italic ">{experience.location}</p>
+    <section id="education" className="section-space" aria-label="Education section">
+      <div className="section-wrap space-y-8">
+        <header className="space-y-4">
+          <p className="section-kicker">Learning Path</p>
+          <h2 className="section-title">Education</h2>
+          <div className="muted-divider" />
+        </header>
+
+        <ul className="space-y-4 sm:space-y-5" aria-label="Education timeline">
+          {EDUCATION.map((item) => (
+            <MotionLi
+              key={`${item.yearRange}-${item.title}`}
+              className="card-shell-strong elevate-hover p-5 sm:p-6"
+              {...getStaggerMotion(prefersReducedMotion)}
+            >
+              <div className="grid gap-4 md:grid-cols-[1fr_2fr] md:items-start">
+                <p className="text-sm font-semibold tracking-wide text-primary">{item.yearRange}</p>
+
+                <div className="space-y-2">
+                  <h3 className="font-display text-lg font-semibold text-text sm:text-xl">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted sm:text-base">{item.location}</p>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+            </MotionLi>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
 
 export default Education;
+
